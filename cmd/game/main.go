@@ -45,7 +45,6 @@ func main() {
 	}()
 
 	<-ctx.Done()
-	printEnd(w)
 
 	if pGame, ok := g.(statistic.PrinterTracker); ok {
 		pGame.PrintStats(w)
@@ -53,17 +52,14 @@ func main() {
 }
 
 func printTitle(w io.Writer) {
-	w.Write([]byte("Добро пожаловать в тренажёр армянского алфавита!\n"))
+	w.Write([]byte("Добро пожаловать в тренажёр армянского алфавита!\n\n"))
+	w.Write([]byte("Тренажёр помогает запомнить буквы и их названия/звуки. Выберите режим, отвечайте на вопросы. В любой момент выйти из игры можно по Ctrl+C.\n\n"))
 }
 
 func printMenu(w io.Writer) {
 	w.Write([]byte(`Выберите режим:
 [1] Назвать букву (по символу)
 [2] Назвать звук/транслитерацию (по символу)
+[3] Показать алфавит
 Выбор:`))
-}
-
-func printEnd(w io.Writer) {
-	w.Write([]byte("\n"))
-	w.Write([]byte("Спасибо за игру!\n"))
 }

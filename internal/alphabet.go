@@ -9,6 +9,11 @@ func (a *Alphabet) RandomLetter() Letter {
 	return letters[rand.IntN(len(letters))]
 }
 
+// AllLetters возвращает все буквы алфавита.
+func (a *Alphabet) AllLetters() []Letter {
+	return letters
+}
+
 type Letter struct {
 	Uppercase rune   // Заглавная форма (Ա, Բ, Գ...)
 	Lowercase rune   // Строчная форма (ա, բ, գ...)

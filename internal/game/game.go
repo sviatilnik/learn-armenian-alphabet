@@ -11,9 +11,10 @@ import (
 type Mode int
 
 const (
-	Letter  Mode = 1
-	Sound   Mode = 2
-	Unknown Mode = 3
+	Letter   Mode = 1
+	Sound    Mode = 2
+	Alphabet Mode = 3 // печать всего алфавита, без статистики
+	Unknown  Mode = 0
 )
 
 var ErrUnknownGameMode = errors.New("unknown game mode")
@@ -33,6 +34,8 @@ func GetModeByString(mode string) Mode {
 		return Letter
 	case 2:
 		return Sound
+	case 3:
+		return Alphabet
 	default:
 		return Unknown
 	}
@@ -48,6 +51,8 @@ func NewGameWithMode(mode Mode) (Game, error) {
 		return new(LetterGame), nil
 	case Sound:
 		return new(SoundGame), nil
+	case Alphabet:
+		return new(AlphabetGame), nil
 	case Unknown:
 		return nil, ErrUnknownGameMode
 	default:
