@@ -2,28 +2,68 @@ package main
 
 import (
 	"bufio"
-	"fmt"
+	"context"
+	"io"
 	"os"
-)
+	"os/signal"
+	"syscall"
 
-type GameMode int
-
-const (
-	Letter GameMode = 1
-	Sound  GameMode = 2
+	"github.com/sviatilnik/learn-armenian-alphabet.git/internal/game"
+	"github.com/sviatilnik/learn-armenian-alphabet.git/internal/statistic"
 )
 
 func main() {
-	fmt.Println(`Добро пожаловать в тренажёр армянского алфавита!
-Выберите режим:
-1. Назвать букву (по символу)
-2. Назвать звук/транслитерацию (по символу)
-3. Выход
-Введите номер режима:`)
+	w := os.Stdout
+	r := os.Stdin
 
-	scanner := bufio.NewScanner(os.Stdin)
+	printTitle(w)
+	printMenu(w)
 
-	if scanner.Scan() {
-		fmt.Println(scanner.Text())
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
+	defer stop()
+
+	var g game.Game
+
+	go func() {
+		scanner := bufio.NewScanner(r)
+
+		var err error
+
+		for g == nil {
+			if scanner.Scan() {
+				mode := game.GetModeByString(scanner.Text())
+
+				g, err = game.NewGameWithMode(mode)
+				if err != nil {
+					w.Write([]byte("Некорректный режим!\n"))
+					printMenu(w)
+				}
+
+				g.Play(ctx, w, r)
+			}
+		}
+	}()
+
+	<-ctx.Done()
+	printEnd(w)
+
+	if pGame, ok := g.(statistic.PrinterTracker); ok {
+		pGame.PrintStats(w)
 	}
+}
+
+func printTitle(w io.Writer) {
+	w.Write([]byte("Добро пожаловать в тренажёр армянского алфавита!\n"))
+}
+
+func printMenu(w io.Writer) {
+	w.Write([]byte(`Выберите режим:
+[1] Назвать букву (по символу)
+[2] Назвать звук/транслитерацию (по символу)
+Выбор:`))
+}
+
+func printEnd(w io.Writer) {
+	w.Write([]byte("\n"))
+	w.Write([]byte("Спасибо за игру!\n"))
 }

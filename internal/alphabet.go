@@ -16,7 +16,7 @@ type Letter struct {
 	Sound     string // Звук (напр. "a", "b", "g")
 }
 
-var letters []Letter = []Letter{
+var letters = []Letter{
 	{
 		Uppercase: 'Ա',
 		Lowercase: 'ա',
@@ -42,8 +42,8 @@ var letters []Letter = []Letter{
 		Sound:     "д",
 	},
 	{
-		Uppercase: 'Դ',
-		Lowercase: 'դ',
+		Uppercase: 'Ե',
+		Lowercase: 'ե',
 		Name:      "едж",
 		Sound:     "е",
 	},
@@ -242,7 +242,7 @@ var letters []Letter = []Letter{
 	{
 		Uppercase: 'և',
 		Lowercase: 'և',
-		Name:      "Ев",
+		Name:      "ев",
 		Sound:     "ев",
 	},
 	{
